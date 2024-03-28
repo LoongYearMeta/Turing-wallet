@@ -1,12 +1,16 @@
+//是一个上下文提供者，管理着钱包锁的状态，可能是指用户的加密钱包是否被锁定的状态。
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { storage } from '../utils/storage';
 import { INACTIVITY_LIMIT } from '../utils/constants';
+
+
 
 export interface WalletLockContextProps {
   isLocked: boolean;
   setIsLocked: React.Dispatch<React.SetStateAction<boolean>>;
   lockWallet: () => void;
 }
+
 
 export const WalletLockContext = createContext<WalletLockContextProps | undefined>(undefined);
 
@@ -19,7 +23,8 @@ export const WalletLockProvider = (props: WalletLockProviderProps) => {
 
   const lockWallet = () => {
     const timestamp = Date.now();
-    const twentyMinutesAgo = timestamp - 20 * 60 * 1000;
+    // const twentyMinutesAgo = timestamp - 20 * 60 * 1000;
+    const twentyMinutesAgo = timestamp - INACTIVITY_LIMIT;
     storage.set({ lastActiveTime: twentyMinutesAgo });
     storage.remove('appState');
     setIsLocked(true);
@@ -37,6 +42,8 @@ export const WalletLockProvider = (props: WalletLockProviderProps) => {
         }
 
         if (currentTime - lastActiveTime > INACTIVITY_LIMIT) {
+          storage.remove('paymentUtxos');
+          // console.log('fresh');
           lockWallet();
         } else {
           setIsLocked(false);

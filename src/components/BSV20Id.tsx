@@ -44,7 +44,7 @@ export const BSV20Id = (props: BSV20IdProps) => {
     onCopyTokenId();
   };
   return (
-    <Container onClick={copy}>
+    <Container style={{ cursor: 'pointer' }} onClick={copy}>
       <IconButton icon={copyIcon} onClick={(e) => copy(e)}></IconButton>
       <TokenId theme={theme} title={id}>
         {showId(id)}

@@ -6,13 +6,14 @@ import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { PageLoader } from '../../components/PageLoader';
 import { PandaHead } from '../../components/PandaHead';
-import { HeaderText, Text } from '../../components/Reusable';
+import { HeaderText, Text , BigCoinLogo} from '../../components/Reusable';
 import { Show } from '../../components/Show';
 import { useBottomMenu } from '../../hooks/useBottomMenu';
 import { useKeys, WifKeys } from '../../hooks/useKeys';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { useTheme } from '../../hooks/useTheme';
 import { sleep } from '../../utils/sleep';
+import yoursLogo from '../../assets/TuringBig.png';
 
 const Content = styled.div`
   display: flex;
@@ -236,7 +237,7 @@ export const ImportWallet = () => {
   const successStep = (
     <>
       <Content>
-        <PandaHead />
+        <BigCoinLogo src={yoursLogo} />
         <HeaderText theme={theme}>Success!</HeaderText>
         <Text theme={theme} style={{ marginBottom: '1rem' }}>
           Your wallet has been imported.

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
+import back from './assets/back.png';
 import styled from 'styled-components';
 import { Show } from './components/Show';
 import { UnlockWallet } from './components/UnlockWallet';
@@ -52,6 +53,51 @@ export type WhitelistedApp = {
   icon: string;
 };
 
+// const MainContainer = styled.div<{ $isMobile?: boolean; $isTabletOrDesktop?: boolean }>`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: ${(props) => (props.$isMobile ? '100vw' : '100%')};
+//   height: ${(props) => (props.$isMobile ? '100vh' : '100vh')};
+//   min-height: ${(props) => (props.$isTabletOrDesktop ? '33.75rem' : 'auto')}; // 最小高度设置，确保在平板和桌面上能占满屏幕
+//   position: relative;
+//   padding: 0;
+//   background-color: ${({ theme }) => theme.mainBackground}; // 填充与背景相同的颜色
+// `;
+// const MainContainer = styled.div<ColorThemeProps>`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 100vw; // 使用100vw确保宽度占满视窗宽度
+//   min-height: 100vh; // 使用100vh的最小高度确保至少占满视窗高度
+//   position: relative;
+//   padding: 0;
+//   background-color: ${({ theme }) => theme.mainBackground}; // 设置背景色填充空白处
+// `;
+
+// const Container = styled.div<{ $isMobile?: boolean }>`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   min-width: ${(props) => (props.$isMobile ? '100vw' : '22.5rem')}; // 确保在非移动设备上宽度至少为22.5rem
+//   min-height: ${(props) => (props.$isMobile ? '100vh' : '33.75rem')}; // 确保在非移动设备上高度至少为33.75rem
+//   background-color: ${({ theme }) => theme.mainBackground}; // 设置背景色填充内部空白处
+//   position: relative;
+// `;
+// background-color: ${({ theme }) => theme.mainBackground}; // 用主题中的背景色填充
+const OuterContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw; // 确保宽度占满整个视窗宽度
+  min-height: 100vh; // 确保最小高度至少占满整个视窗高度
+  background-color: ${({ theme }) => theme.mainBackground};
+  background-image: url(${back}); // 设置背景图片
+  background-size: cover; // 确保背景图片覆盖整个容器
+  background-position: center; // 将背景图片居中显示
+  background-repeat: no-repeat; // 防止背景图片重复
+`;
+
 const MainContainer = styled.div<{ $isMobile?: boolean }>`
   display: flex;
   align-items: center;
@@ -73,7 +119,7 @@ const Container = styled.div<ColorThemeProps>`
 `;
 export const App = () => {
   const { isLocked } = useWalletLockState();
-  const { isMobile } = useViewport();
+  const { isMobile, isTablet, isDesktop } = useViewport();
   const { theme } = useTheme();
   const menuContext = useContext(BottomMenuContext);
   const [popupId, setPopupId] = useState<number | undefined>();
@@ -91,7 +137,7 @@ export const App = () => {
   const [messagesToDecrypt, setMessagesToDecrypt] = useState<Web3DecryptRequest | undefined>();
 
   useActivityDetector(isLocked);
-
+  const isTabletOrDesktop = isTablet || isDesktop;
   const handleUnlock = async () => {
     window.location.reload();
   };
@@ -180,11 +226,14 @@ export const App = () => {
       },
     );
   }, [isLocked, menuContext]);
-
+//这里是修改插件
   return (
-    <MainContainer $isMobile={isMobile}>
+  <OuterContainer theme={theme}>
+    <MainContainer $isMobile={isMobile} >
+     {/* <MainContainer theme={theme}> */}
       <BottomMenuProvider>
-        <Container theme={theme}>
+        <Container theme={theme}> 
+        {/* <Container $isMobile={isMobile} theme={theme}> */}
           <SnackbarProvider>
             <Show when={!isLocked} whenFalseContent={<UnlockWallet onUnlock={handleUnlock} />}>
               <Router>
@@ -312,5 +361,6 @@ export const App = () => {
         </Container>
       </BottomMenuProvider>
     </MainContainer>
+    </OuterContainer>
   );
 };

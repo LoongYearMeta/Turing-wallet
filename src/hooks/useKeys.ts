@@ -25,7 +25,7 @@ export type WifKeys = {
   identityPk?: string;
 };
 
-export type SupportedWalletImports = 'relayx' | 'twetch' | 'panda' | 'yours' | 'wif'; // panda and yours are the same
+export type SupportedWalletImports = 'relayx' | 'twetch' | 'panda' | 'yours' | 'wif'; 
 
 export const useKeys = () => {
   const [bsvAddress, setBsvAddress] = useState('');
@@ -67,7 +67,7 @@ export const useKeys = () => {
     })();
   }, [bsvPubKey, ordPubKey, network]);
 
-  const generateSeedAndStoreEncrypted = (
+  const generateSeedAndStoreEncrypted = (//函数的主要目的看起来是为了生成一种加密形式的种子或秘密信息，并可能涉及钱包导入以及与不同服务相关的派生路径
     password: string,
     mnemonic?: string,
     walletDerivation: string | null = null,

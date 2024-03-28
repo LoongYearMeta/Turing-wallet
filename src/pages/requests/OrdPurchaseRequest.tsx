@@ -177,7 +177,7 @@ export const OrdPurchaseRequest = (props: OrdPurchaseRequestProps) => {
               label={`Pay ${(
                 (Number(inscription?.data?.list?.price) * (1 + marketplaceRate)) /
                 BSV_DECIMAL_CONVERSION
-              ).toFixed(8)} BSV`}
+              ).toFixed(8)} TBC`}
               disabled={isProcessing}
               isSubmit
             />

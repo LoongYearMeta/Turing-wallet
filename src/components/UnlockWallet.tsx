@@ -8,8 +8,10 @@ import { sleep } from '../utils/sleep';
 import { storage } from '../utils/storage';
 import { Button } from './Button';
 import { Input } from './Input';
-import yoursLogo from '../assets/yours-logo.png';
-import { FormContainer, HeaderText, Text, YoursLogo } from './Reusable';
+import { SpeedBump } from '../components/SpeedBump';
+import yoursLogo from '../assets/TuringBox.png';
+import { FormContainer, HeaderText, Text, YoursLogo ,BoxLogo} from './Reusable';
+
 
 const Container = styled.div<ColorThemeProps & { $isMobile: boolean }>`
   display: flex;
@@ -59,9 +61,10 @@ export const UnlockWallet = (props: UnlockWalletProps) => {
     }
   };
 
+
   return (
     <Container $isMobile={isMobile} theme={theme}>
-      <YoursLogo src={yoursLogo} />
+      <BoxLogo src={yoursLogo} />
       <HeaderText style={{ fontSize: '1.75rem' }} theme={theme}>
         Unlock Wallet
       </HeaderText>
@@ -77,10 +80,18 @@ export const UnlockWallet = (props: UnlockWalletProps) => {
         />
         <Button
           theme={theme}
-          type="secondary-outline"
+          type="primary"
           label={isProcessing ? 'Unlocking...' : 'Unlock'}
           disabled={isProcessing}
           isSubmit
+        />
+        <Button
+          theme={theme}
+          type="secondary-outline"
+          label={'Sign Out'}
+          onClick={() => {
+          storage.clear(); 
+          window.location.reload();}}
         />
       </FormContainer>
     </Container>

@@ -1,3 +1,5 @@
+//这里是代码交易在本地钱包的工作流程
+//这里是与发送币相关的代码
 import init, {
   BSM,
   ChainParams,
@@ -151,7 +153,7 @@ export const useBsv = () => {
         }
       }
 
-      let feeSats = 20;
+      let feeSats = 80;//这是每笔的最少手续费
       const isBelowNoApprovalLimit = Number(bsvSendAmount) <= Number(noApprovalLimit);
       const keys = await retrieveKeys(password, isBelowNoApprovalLimit);
       if (!keys?.walletWif || !keys.walletPubKey) throw Error('Undefined key');
@@ -222,7 +224,7 @@ export const useBsv = () => {
         inTx.set_satoshis(BigInt(u.satoshis));
         tx.add_input(inTx);
 
-        const sig = tx.sign(paymentPk, SigHash.InputOutputs, idx, Script.from_hex(u.script), BigInt(u.satoshis));
+        const sig = tx.sign(paymentPk, SigHash.InputOutputs, idx, Script.from_hex(u.script), BigInt(u.satoshis));//签名
 
         inTx.set_unlocking_script(Script.from_asm_string(`${sig.to_hex()} ${paymentPk.to_public_key().to_hex()}`));
         tx.set_input(idx, inTx);
@@ -239,7 +241,8 @@ export const useBsv = () => {
       if (bytes > MAX_BYTES_PER_TX) return { error: 'tx-size-too-large' };
 
       const rawtx = tx.to_hex();
-      let { txid } = await broadcastWithGorillaPool(rawtx);
+      let { txid } = await broadcastWithGorillaPool(rawtx);//这里是调用广播交易的api
+      console.log('txid:', txid);
       if (txid) {
         if (isBelowNoApprovalLimit) {
           storage.get(['noApprovalLimit'], ({ noApprovalLimit }) => {
@@ -260,12 +263,12 @@ export const useBsv = () => {
     }
   };
 
-  const signMessage = async (
+  const signMessage = async (//这里是使用用户私钥来签名
     messageToSign: Web3SignMessageRequest,
     password: string,
   ): Promise<SignMessageResponse | undefined> => {
     const { message, encoding } = messageToSign;
-    const isAuthenticated = await verifyPassword(password);
+    const isAuthenticated = await verifyPassword(password);//验证给定的消息和签名是否匹配指定的公钥。
     if (!isAuthenticated) {
       return { error: 'invalid-password' };
     }
@@ -314,9 +317,11 @@ export const useBsv = () => {
     }
   };
 
-  const updateBsvBalance = async (pullFresh?: boolean) => {
+  const updateBsvBalance = async (pullFresh?: boolean) => {//这里是更新Blockchain获取BSV地址的最新余额。
     const total = await getBsvBalance(bsvAddress, pullFresh);
     setBsvBalance(total ?? 0);
+    // if(pullFresh===true){console.log("调用了云端余额更新")};
+    // if(pullFresh===false){console.log("调用了本地余额更新")};
   };
 
   const rate = async () => {

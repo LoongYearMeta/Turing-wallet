@@ -19,9 +19,10 @@ const $shakeAnimation = keyframes`
     transform: translate3d(4px, 0, 0);
   }
 `;
-
+// background-color: ${({ theme }) => theme.gray + '10'};
+//border: 1px solid ${({ theme }) => theme.gray + '50'};
 const TheInput = styled.input<{ theme: Theme; $shake?: string }>`
-  background-color: ${({ theme }) => theme.gray + '10'};
+  background-color: ${({ theme }) => theme.gray + '10' };
   border-radius: 1.25rem;
   border: 1px solid ${({ theme }) => theme.gray + '50'};
   font-size: 0.85rem;

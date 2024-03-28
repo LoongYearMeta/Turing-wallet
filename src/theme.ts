@@ -14,12 +14,23 @@ export type ColorThemeProps = {
   theme: Theme;
 };
 
+// export const defaultTheme: Theme = {
+//   darkAccent: '#17191E', //方框的颜色
+//   mainBackground: '#010101',//主背景颜色
+//   lightAccent: '#A1FF8B',
+//   primaryButton: '#f4606c',// send按钮的颜色
+//   white: '#FFFFFF',//字体颜色
+//   black: '#000000',
+//   gray: '#98A2B3',
+//   errorRed: '#FF4646',
+//   warning: '#F79009',
+// };
 export const defaultTheme: Theme = {
-  darkAccent: '#17191E',
-  mainBackground: '#010101',
+  darkAccent: '#17191E', //方框的颜色
+  mainBackground: '#010101',//主背景颜色
   lightAccent: '#A1FF8B',
-  primaryButton: '#34D399',
-  white: '#FFFFFF',
+  primaryButton: '#D53B26',// send按钮的颜色
+  white: '#FFFFFF',//字体颜色
   black: '#000000',
   gray: '#98A2B3',
   errorRed: '#FF4646',

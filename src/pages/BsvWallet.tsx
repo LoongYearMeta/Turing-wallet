@@ -1,8 +1,9 @@
 import { validate } from 'bitcoin-address-validation';
 import React, { useEffect, useState } from 'react';
+// import { YoursLogo } from '../components/Reusable';
 import styled from 'styled-components';
-import bsvCoin from '../assets/bsv-coin.svg';
-import switchAsset from '../assets/switch-asset.svg';
+import tbcCoin from '../assets/TuringLiitleCoin.png';
+import yoursLogo from '../assets/TuringHome.png';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { PageLoader } from '../components/PageLoader';
@@ -32,6 +33,20 @@ import { sleep } from '../utils/sleep';
 import { storage } from '../utils/storage';
 import copyIcon from '../assets/copy.svg';
 import { AssetRow } from '../components/AssetRow';
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: calc(75%);
+  overflow-y: auto;
+  overflow-x: hidden;
+`;
+//12
+const YoursLogo = styled.img`
+  width: 240px;
+  height: 143px;
+`;
 
 const MiddleContainer = styled.div<ColorThemeProps>`
   display: flex;
@@ -55,6 +70,12 @@ const ProfileImage = styled.img`
   }
 `;
 
+const HeaderContainer = styled.div`
+  display: flex;
+  align-items: center; // 垂直居中
+  justify-content: start; // 从头开始排列
+`;
+
 const BalanceContainer = styled.div`
   display: flex;
   align-items: center;
@@ -63,7 +84,7 @@ const BalanceContainer = styled.div`
 const Icon = styled.img<{ size?: string }>`
   width: ${(props) => props.size ?? '1.5rem'};
   height: ${(props) => props.size ?? '1.5rem'};
-  margin: 0 0.5rem 0 0;
+  margin: 0 1rem 0 0;
 `;
 
 const InputAmountWrapper = styled.div`
@@ -137,9 +158,11 @@ export const BsvWallet = (props: BsvWalletProps) => {
     setSuccessTxId('');
     setIsProcessing(false);
 
-    setTimeout(() => {
-      updateBsvBalance(true);
-    }, 500);
+     setTimeout(() => {//这里是零确认修改的地方
+       // nukeUtxos();
+      updateBsvBalance(false);
+      }, 500);
+    // console.log('进行的本地更新');
   };
 
   const handleCopyToClipboard = () => {
@@ -163,7 +186,7 @@ export const BsvWallet = (props: BsvWalletProps) => {
     setIsProcessing(true);
     await sleep(25);
     if (!validate(receiveAddress)) {
-      addSnackbar('You must enter a valid BSV address. Paymail not yet supported.', 'info');
+      addSnackbar('You must enter a valid TBC address. Paymail not yet supported.', 'info');
       setIsProcessing(false);
       return;
     }
@@ -186,7 +209,8 @@ export const BsvWallet = (props: BsvWalletProps) => {
     }
 
     const sendRes = await sendBsv([{ address: receiveAddress, satoshis }], passwordConfirm);
-    if (!sendRes.txid || sendRes.error) {
+     if (!sendRes.txid || sendRes.error) {
+    // if (!sendRes.txid ) {
       const message =
         sendRes.error === 'invalid-password'
           ? 'Invalid Password!'
@@ -194,7 +218,7 @@ export const BsvWallet = (props: BsvWalletProps) => {
             ? 'Insufficient Funds!'
             : sendRes.error === 'fee-too-high'
               ? 'Miner fee too high!'
-              : 'An unknown error has occurred! Try again.';
+              : 'An unknown error has occurred! Try again.';//这里是等待确认错误的地方
 
       addSnackbar(message, 'error');
       setPasswordConfirm('');
@@ -202,7 +226,7 @@ export const BsvWallet = (props: BsvWalletProps) => {
     }
 
     setSuccessTxId(sendRes.txid);
-    addSnackbar('Transaction Successful!', 'success');
+    addSnackbar('Transaction Successful! Please wait a few minutes for your balance to refresh.', 'success');
   };
 
   const fillInputWithAllBsv = () => {
@@ -227,7 +251,7 @@ export const BsvWallet = (props: BsvWalletProps) => {
 
   const getLabel = () => {
     return amountType === 'bsv' && satSendAmount
-      ? `Send ${(satSendAmount / BSV_DECIMAL_CONVERSION).toFixed(8)}`
+      ? `Send ${(satSendAmount / BSV_DECIMAL_CONVERSION).toFixed(6)}`
       : amountType === 'usd' && usdSendAmount
         ? `Send ${formatUSD(usdSendAmount)}`
         : 'Enter Send Details';
@@ -237,17 +261,31 @@ export const BsvWallet = (props: BsvWalletProps) => {
     storage.remove('paymentUtxos');
     // Give enough time for storage to remove
     setTimeout(() => {
-      updateBsvBalance(true);
+      updateBsvBalance(true);//这里是自动更新余额
     }, 50);
+    addSnackbar('Balance refreshed successfully.', 'success');
   };
+  
+  // useEffect(() => {
+  //   // 组件加载后立即更新一次余额
+  //   // nukeUtxos();
+  //   // 设置定时器，每五分钟更新一次余额
+  //   const intervalId = setInterval(() => {
+  //     nukeUtxos();
+  //   }, 600000); // 600000毫秒 = 10分钟
+  //   // console.log('BANLANCEFRESH');
+  //   // 组件卸载时清除定时器
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   const receive = (
     <ReceiveContent>
       <HeaderText style={{ marginTop: '1rem' }} theme={theme}>
-        Receive BSV
+        Receive TBC
       </HeaderText>
       <Text style={{ marginBottom: '1.25rem' }} theme={theme}>
-        Only send BSV to this address. <Warning theme={theme}>Do not send Ordinals or BSV20 here.</Warning>
+        Only send TBC to this address. 
+        {/* <Warning theme={theme}>Do not send Ordinals or BSV20 here.</Warning> */}
       </Text>
       <QrCode address={bsvAddress} onClick={handleCopyToClipboard} />
       <CopyAddressWrapper onClick={handleCopyToClipboard}>
@@ -262,7 +300,7 @@ export const BsvWallet = (props: BsvWalletProps) => {
         type="secondary"
         onClick={() => {
           setPageState('main');
-          updateBsvBalance(true);
+          updateBsvBalance(false);
         }}
       />
     </ReceiveContent>
@@ -272,22 +310,48 @@ export const BsvWallet = (props: BsvWalletProps) => {
     <MainContent>
       <MiddleContainer theme={theme}>
         <Show when={socialProfile.avatar !== HOSTED_PANDA_IMAGE}>
-          <ProfileImage title="Refresh balance" src={socialProfile.avatar} onClick={nukeUtxos} />
+          <ProfileImage title="Refresh balance" src={socialProfile.avatar}  />
         </Show>
-        <HeaderText style={{ fontSize: '2rem', cursor: 'pointer' }} theme={theme} onClick={nukeUtxos}>
-          {formatUSD(bsvBalance * exchangeRate)}
-        </HeaderText>
+        {/* <HeaderText style={{ fontSize: '2rem', cursor: 'pointer' }} theme={theme} onClick={nukeUtxos}> */}
+        {/* <Icon
+              src={switchAsset}
+              size="10rem"
+              style={{
+                position: 'absolute',
+                right: '2.25rem',
+                cursor: 'pointer',
+              }}
+              onClick={nukeUtxos}
+            /> */}
+        <YoursLogo src={yoursLogo} style={{cursor: 'pointer' }} title="BlanceFresh" onClick={nukeUtxos}/>
+        {/* <YoursLogo src={yoursLogo} /> */}
+        <HeaderContainer>
+            {/* <HeaderText style={{ fontSize: '2rem' ,cursor: 'pointer' }} theme={theme} title="BlanceFresh" onClick={nukeUtxos}>Turing Bitchain</HeaderText> */}
+        {/* <HeaderText  theme={theme} title="BlanceFresh"> */}
+            {/* <Icon title="BlanceFresh"
+              src={ArrowClockwise}
+              size="2rem"
+              style={{
+                cursor: 'pointer',
+              }}
+              onClick={nukeUtxos}
+            /> */}
+        </HeaderContainer>
+          {/* {formatUSD(bsvBalance * exchangeRate)}这里是美元价值 */}
+          {/* <Icon src={tbcCoin} size="2rem"  />
+            {bsvBalance} */}
+        {/* </HeaderText> */}
         <BalanceContainer>
-          <Icon src={bsvCoin} size="1rem" />
+          {/* <Icon src={tbcCoin} size="1rem" />
           <Text theme={theme} style={{ margin: '0' }}>
-            {bsvBalance}
-          </Text>
+            {bsvBalance}这里是币数量
+          </Text> */}
         </BalanceContainer>
         <ButtonContainer>
           <Button theme={theme} type="primary" label="Receive" onClick={() => setPageState('receive')} />
           <Button theme={theme} type="primary" label="Send" onClick={() => setPageState('send')} />
         </ButtonContainer>
-        <AssetRow balance={bsvBalance} icon={bsvCoin} ticker="BSV" usdBalance={bsvBalance * exchangeRate} />
+        <AssetRow balance={bsvBalance} icon={tbcCoin} ticker="TBC" usdBalance={bsvBalance * exchangeRate} />
       </MiddleContainer>
     </MainContent>
   );
@@ -295,7 +359,7 @@ export const BsvWallet = (props: BsvWalletProps) => {
   const send = (
     <>
       <ConfirmContent>
-        <HeaderText theme={theme}>Send BSV</HeaderText>
+        <HeaderText theme={theme}>Send TBC</HeaderText>
         <Text
           theme={theme}
           style={{ cursor: 'pointer' }}
@@ -312,7 +376,7 @@ export const BsvWallet = (props: BsvWalletProps) => {
           <InputAmountWrapper>
             <Input
               theme={theme}
-              placeholder={amountType === 'bsv' ? 'Enter BSV Amount' : 'Enter USD Amount'}
+              placeholder={amountType === 'bsv' ? 'Enter TBC Amount' : 'Enter USD Amount'}
               type="number"
               step="0.00000001"
               value={
@@ -339,7 +403,7 @@ export const BsvWallet = (props: BsvWalletProps) => {
                 }
               }}
             />
-            <Icon
+            {/* <Icon
               src={switchAsset}
               size="1rem"
               style={{
@@ -348,7 +412,7 @@ export const BsvWallet = (props: BsvWalletProps) => {
                 cursor: 'pointer',
               }}
               onClick={toggleAmountType}
-            />
+            /> */}
           </InputAmountWrapper>
           <Show when={isPasswordRequired}>
             <Input
@@ -379,19 +443,19 @@ export const BsvWallet = (props: BsvWalletProps) => {
       </ConfirmContent>
     </>
   );
-
+  //这里是修改回插件
   return (
-    <>
+    <Content>
       <TopNav />
       <Show when={isProcessing && pageState === 'main'}>
         <PageLoader theme={theme} message="Loading wallet..." />
       </Show>
       <Show when={isProcessing && pageState === 'send'}>
-        <PageLoader theme={theme} message="Sending BSV..." />
+        <PageLoader theme={theme} message="Sending TBC..." />
       </Show>
       <Show when={!isProcessing && pageState === 'main'}>{main}</Show>
       <Show when={!isProcessing && pageState === 'receive'}>{receive}</Show>
       <Show when={!isProcessing && pageState === 'send'}>{send}</Show>
-    </>
+    </Content>
   );
 };

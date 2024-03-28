@@ -88,11 +88,25 @@ export const ReceiveContent = styled(MainContent)`
   width: 100%;
   height: calc(100% - 3.75rem);
 `;
-
-export const YoursLogo = styled.img`
-  width: 5rem;
-  height: 5rem;
+export const TopLogo = styled.img`
+  width: 139px;
+  height: 40px;
 `;
+//15
+export const YoursLogo = styled.img`
+  width: 167px;
+  height: 211px;
+`;
+export const BoxLogo = styled.img`
+  width: 215px;
+  height: 174px;
+`;
+export const BigCoinLogo = styled.img`
+  width: 175px;
+  height: 183px;
+`;
+// width: 5rem;
+//   height: 5rem;
 
 export const GithubIcon = styled.img`
   width: 1.25rem;

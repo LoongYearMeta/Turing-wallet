@@ -100,20 +100,20 @@ export const BottomMenu = (props: BottomMenuProps) => {
         onClick={() => handleSelect('bsv')}
         opacity={selected === 'bsv' ? 1 : 0.4}
       />
-      <Menu
+      {/* <Menu
         label="Tokens"
         theme={theme}
         src={tokens}
         onClick={() => handleSelect('ords')}
         opacity={selected === 'ords' ? 1 : 0.4}
-      />
-      <Menu
+      /> */}
+      {/* <Menu
         label="Resources"
         theme={theme}
         src={info}
         onClick={() => handleSelect('apps')}
         opacity={selected === 'apps' ? 1 : 0.4}
-      />
+      /> */}
       <Menu
         label="Settings"
         theme={theme}

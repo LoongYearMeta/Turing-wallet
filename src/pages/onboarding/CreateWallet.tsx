@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { PageLoader } from '../../components/PageLoader';
-import { HeaderText, Text, YoursLogo } from '../../components/Reusable';
+import { TopLogo,HeaderText, Text, BoxLogo } from '../../components/Reusable';
 import { Show } from '../../components/Show';
 import { useBottomMenu } from '../../hooks/useBottomMenu';
 import { useKeys } from '../../hooks/useKeys';
@@ -13,7 +13,8 @@ import { useTheme } from '../../hooks/useTheme';
 import { ColorThemeProps } from '../../theme';
 import { sleep } from '../../utils/sleep';
 import copyIcon from '../../assets/copy-green.svg';
-import yoursLogo from '../../assets/yours-logo.png';
+import yoursLogo from '../../assets/TuringBox.png';
+import topLogo from '../../assets/turingnewlog.png';
 
 const Content = styled.div`
   display: flex;
@@ -111,6 +112,7 @@ export const CreateWallet = () => {
   const passwordStep = (
     <>
       <Content>
+        <TopLogo style={{ marginBottom: '50px' }} src={topLogo}/>
         <HeaderText theme={theme}>Create password</HeaderText>
         <Text style={{ marginBottom: '1rem' }} theme={theme}>
           This will be used to unlock your wallet.
@@ -183,7 +185,7 @@ export const CreateWallet = () => {
   const successStep = (
     <>
       <Content>
-        <YoursLogo src={yoursLogo} />
+        <BoxLogo src={yoursLogo} />
         <HeaderText theme={theme}>Success!</HeaderText>
         <Text theme={theme} style={{ marginBottom: '1rem' }}>
           Your wallet is ready to go.

@@ -174,7 +174,7 @@ export const BroadcastRequest = (props: BroadcastRequestProps) => {
             <Button
               theme={theme}
               type="primary"
-              label={`Broadcast - ${satsOut / BSV_DECIMAL_CONVERSION} BSV`}
+              label={`Broadcast - ${satsOut / BSV_DECIMAL_CONVERSION} TBC`}
               disabled={isProcessing}
               isSubmit
             />

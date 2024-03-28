@@ -19,7 +19,7 @@ export const QrCode = (props: QrCodeProps) => {
   const [qrUrl, setQrUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const uri = `bitcoin:${address}`;
+    const uri = `TBC:${address}`;
     qr.toDataURL(uri, function (err, url) {
       if (err) {
         console.error(err);
@@ -29,5 +29,5 @@ export const QrCode = (props: QrCodeProps) => {
     });
   }, [address]);
 
-  return <>{qrUrl && <QrImage src={qrUrl} alt="Bitcoin QR Code" onClick={onClick} />}</>;
+  return <>{qrUrl && <QrImage src={qrUrl} alt="TBC QR Code" onClick={onClick} />}</>;
 };

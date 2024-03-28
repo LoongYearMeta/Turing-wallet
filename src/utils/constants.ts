@@ -1,15 +1,17 @@
-export const WOC_BASE_URL = 'https://api.whatsonchain.com/v1/bsv/main';
+export const WOC_BASE_URL = 'https://api.whatsonchain.com/v1/bsv/main';//这里是查询余额的url woc的主网
+export const TBC_BASE_URL = 'http://13.250.100.155:5000/v1/bsv/main'; 
 
 export const WOC_TESTNET_BASE_URL = 'https://api.whatsonchain.com/v1/bsv/test';
+export const TBC_TESTNET_URL = 'http://192.168.50.01:5000/v1/bsv/main';//这是tbc的测试网
 
-export const GP_BASE_URL = 'https://ordinals.gorillapool.io';
+export const GP_BASE_URL = 'https://ordinals.gorillapool.io';//这里是主网的url 上链的网络 send需要修改的地方 猩猩池的主网
 export const JUNGLE_BUS_URL = 'https://junglebus.gorillapool.io';
 
 export const GP_TESTNET_BASE_URL = 'https://testnet.ordinals.gorillapool.io';
 export const GORILLA_POOL_ARC_URL = 'https://arc.gorillapool.io/v1';
-export const BSV_DECIMAL_CONVERSION = 100000000;
+export const BSV_DECIMAL_CONVERSION = 1000000;//这里是btc的单位转换
 export const BSV20_INDEX_FEE = 1000;
-export const FEE_PER_BYTE = 0.1;
+export const FEE_PER_BYTE = 0.26;
 export const MAX_BYTES_PER_TX = 50000000; // 50MB
 export const MAX_FEE_PER_TX = MAX_BYTES_PER_TX * FEE_PER_BYTE;
 export const GLOBAL_ORDERBOOK_MARKET_RATE = 0.05;
@@ -17,7 +19,7 @@ export const FEE_SATS = 125;
 export const P2PKH_INPUT_SIZE = 148;
 export const P2PKH_OUTPUT_SIZE = 34;
 export const DUST = 10;
-export const INACTIVITY_LIMIT = 10 * 60 * 1000; // 10 minutes
+export const INACTIVITY_LIMIT = 10 * 60 * 1000; // 60 mins locked
 export const SNACKBAR_TIMEOUT = 3 * 1000; // 2.5 seconds
 export const HOSTED_PANDA_IMAGE = 'https://i.ibb.co/3fLL5X2/Panda-Wallet-Logo.png';
 export const PANDA_DEV_WALLET = '1MtzWXQEYGp89bQ9U2nfrnuChFv37j6pV6';
@@ -47,10 +49,11 @@ export const whiteListedColorThemeCollections = [
 ];
 
 // Featured 3rd party integrations
+//这里是头像
 export const featuredApps = [
   {
     icon: 'https://avatars.githubusercontent.com/u/159480043?s=400&u=8b1a3850d6e233f4d59af3275fe9e5e3fd81dcb3&v=4',
-    name: 'Yours',
+    name: 'Turing',
     link: 'https://yours.org',
   },
   {

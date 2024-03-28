@@ -30,7 +30,7 @@ import { sleep } from '../utils/sleep';
 // import { BsvSendRequest } from './requests/BsvSendRequest';
 import { TopNav } from '../components/TopNav';
 import { AssetRow } from '../components/AssetRow';
-import bsvCoin from '../assets/bsv-coin.svg';
+import tbcCoin from '../assets/TuringLiitleCoin.png';
 
 const Content = styled.div`
   display: flex;
@@ -298,7 +298,7 @@ export const AppsAndTools = () => {
         ticker="Total Locked"
         balance={totalLocked / BSV_DECIMAL_CONVERSION}
         usdBalance={Number((totalUnlockable / BSV_DECIMAL_CONVERSION).toFixed(3))}
-        icon={bsvCoin}
+        icon={tbcCoin}
         isUnlockPage
       />
       <Show when={isPasswordRequired}>
@@ -313,7 +313,7 @@ export const AppsAndTools = () => {
       <Button
         theme={theme}
         type="primary"
-        label={`Unlock ${totalUnlockable / BSV_DECIMAL_CONVERSION} BSV`}
+        label={`Unlock ${totalUnlockable / BSV_DECIMAL_CONVERSION} TBC`}
         onClick={handleUnlock}
       />
       <Button
@@ -349,7 +349,7 @@ export const AppsAndTools = () => {
                 <LockDetailsText style={{ textAlign: 'right' }} theme={theme}>
                   {u.satoshis < 1000
                     ? `${u.satoshis} ${u.satoshis > 1 ? 'sats' : 'sat'}`
-                    : `${u.satoshis / BSV_DECIMAL_CONVERSION} BSV`}
+                    : `${u.satoshis / BSV_DECIMAL_CONVERSION} TBC`}
                 </LockDetailsText>
               </LockDetailsContainer>
             );
@@ -362,7 +362,7 @@ export const AppsAndTools = () => {
     <PageWrapper $marginTop={featuredApps.length === 0 ? '10rem' : '0'}>
       <Show when={featuredApps.length > 0} whenFalseContent={<Text theme={theme}>No apps</Text>}>
         <Text theme={theme} style={{ marginBottom: 0 }}>
-          If your app has integrated Yours Wallet but is not listed,{' '}
+          If your app has integrated Turing Wallet but is not listed,{' '}
           <a href={YOURS_GITHUB_REPOS} rel="noreferrer" target="_blank" style={{ color: theme.white }}>
             let us know!
           </a>
@@ -417,7 +417,7 @@ export const AppsAndTools = () => {
   //     <YoursLogo src={yoursLogo} />
   //     <HeaderText theme={theme}>Fund Developers</HeaderText>
   //     <Text theme={theme} style={{ width: '95%', margin: '0.5rem 0 1rem 0' }}>
-  //       Yours is an open-source initiative, consider supporting the devs.
+  //       Turing is an open-source initiative, consider supporting the devs.
   //     </Text>
   //     <Show
   //       when={otherIsSelected}

@@ -3,11 +3,11 @@ import { ColorThemeProps, Theme } from '../theme';
 import { Show } from './Show';
 
 export type ButtonStyles = 'primary' | 'secondary' | 'secondary-outline' | 'warn';
-
+//background: linear-gradient(45deg, ${({ theme }) => theme.lightAccent}, ${({ theme }) => theme.primaryButton});
 const Primary = styled.button<ColorThemeProps>`
   width: 87%;
   height: 2.25rem;
-  background: linear-gradient(45deg, ${({ theme }) => theme.lightAccent}, ${({ theme }) => theme.primaryButton});
+  background: ${({ theme }) => theme.primaryButton};
   color: ${({ theme }) => theme.mainBackground};
   border: none;
   border-radius: 1.25rem;
@@ -29,12 +29,12 @@ const Primary = styled.button<ColorThemeProps>`
     transform: scale(1.025);
   }
 `;
-
+//background: linear-gradient(45deg, ${({ theme }) => theme.lightAccent}, ${({ theme }) => theme.primaryButton});
 const GradientBorderWrapper = styled.div<ColorThemeProps>`
   display: flex;
   align-items: center;
   padding: 1px; /* border thickness */
-  background: linear-gradient(45deg, ${({ theme }) => theme.lightAccent}, ${({ theme }) => theme.primaryButton});
+  background: ${({ theme }) => theme.primaryButton};
   border-radius: 1.25rem;
   width: 87%;
   margin: 0.5rem;

@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import gihubIcon from '../../assets/github.svg';
+import points from '../../assets/Point.png';
 import { Button } from '../../components/Button';
-import { GithubIcon, Text, YoursLogo } from '../../components/Reusable';
+import { TopLogo, Text, YoursLogo,GithubIcon } from '../../components/Reusable';
 import { Show } from '../../components/Show';
 import { useBottomMenu } from '../../hooks/useBottomMenu';
 import { useTheme } from '../../hooks/useTheme';
 import { ColorThemeProps } from '../../theme';
 import { storage } from '../../utils/storage';
-import yoursLogo from '../../assets/yours-logo.png';
+import yoursLogo from '../../assets/turingmagic.png';
+import topLogo from '../../assets/turingnewlog.png';
 
 const Content = styled.div`
   display: flex;
@@ -62,10 +63,11 @@ export const Start = () => {
   return (
     <Show when={showStart}>
       <Content>
+        <TopLogo src={topLogo}/>
         <YoursLogo src={yoursLogo} />
-        <TitleText theme={theme}>Yours Wallet</TitleText>
+        <TitleText theme={theme}>Turing Wallet</TitleText>
         <Text theme={theme} style={{ margin: '0.25rem 0 1rem 0' }}>
-          An open source project.
+          The Wallet for Second Life.
         </Text>
         <Button theme={theme} type="primary" label="Create New Wallet" onClick={() => navigate('/create-wallet')} />
         <Button
@@ -76,8 +78,9 @@ export const Start = () => {
         />
         <GithubIcon
           style={{ marginTop: '1rem' }}
-          src={gihubIcon}
-          onClick={() => window.open('https://github.com/yours-org', '_blank')}
+          src={points}
+          title="TBC points are coming soon..."
+          // onClick={() => window.open('https://github.com/yours-org', '_blank')}
         />
       </Content>
     </Show>

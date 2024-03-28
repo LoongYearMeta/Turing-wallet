@@ -1,12 +1,12 @@
 {
-  "version": "3.0.0",
+  "version": "1.0.0",
   "manifest_version": 3,
-  "name": "Yours Wallet",
-  "description": "A non-custodial and open-source wallet for BSV and 1Sat Ordinals",
+  "name": "Turing Wallet",
+  "description": "A wallet for TBC",
   "permissions": ["storage", "unlimitedStorage"],
   "action": {
     "default_popup": "index.html",
-    "default_title": "Yours Wallet"
+    "default_title": "Turing Wallet"
   },
   "background": {
     "service_worker": "background.js",

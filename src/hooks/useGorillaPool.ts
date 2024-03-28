@@ -1,3 +1,4 @@
+//这里是发送币所需的方法，调用的各种api
 import axios from 'axios';
 import init, { ChainParams, P2PKHAddress, PrivateKey, Transaction, TxOut } from 'bsv-wasm-web';
 import { TaggedDerivationResponse } from '../pages/requests/GenerateTaggedKeysRequest';
@@ -79,14 +80,15 @@ export type MarketResponse = {
 export const useGorillaPool = () => {
   const { network, isAddressOnRightNetwork } = useNetwork();
 
-  const getOrdinalsBaseUrl = () => {
+  const getOrdinalsBaseUrl = () => {//这里是编码后的交易数据发送到GorillaPool提供的API端点
     return network === NetWork.Mainnet ? GP_BASE_URL : GP_TESTNET_BASE_URL;
   };
 
   const getChainParams = (network: NetWork): ChainParams => {
     return network === NetWork.Mainnet ? ChainParams.mainnet() : ChainParams.testnet();
   };
-
+//用来获取一个地址的未花费交易输出（unspent transaction outputs, UTXOs）列表。该函数接受一个 ordAddress 参数（表示需要查询UTXOs的地址），
+//并且返回一个名为 OrdinalResponse 类型的 Promise 对象
   const getOrdUtxos = async (ordAddress: string): Promise<OrdinalResponse> => {
     try {
       if (!isAddressOnRightNetwork(ordAddress)) return [];
@@ -99,15 +101,31 @@ export const useGorillaPool = () => {
       return [];
     }
   };
-
+//这里是广播到链上的函数 
+// 这段代码定义了一个名为 broadcastWithGorillaPool 的异步函数，作用是将一个已签名的比特币交易的十六进制字符串 txhex 通过GorillaPool的API发送到比特币网络中。以下是该函数执行的逻辑：
+// 首先，函数尝试执行一个操作，而这个操作可能抛出异常（错误），所以它被包裹在一个 try 代码块中，允许错误被 catch 代码块捕获。
+// 函数将交易的十六进制字符串 txhex 转换成 base64 编码。这通常是因为API接口可能要求以 base64 格式提交数据而不是原始的十六进制。
+// 然后，使用 axios.post 方法，函数通过HTTP POST请求将编码后的交易数据发送到GorillaPool提供的API端点。API的URL通过调用 getOrdinalsBaseUrl() 获取，该函数看起来会返回API的基本URL。发送的数据包括一个对象，它有一个 rawtx 键，其值为编码后的交易数据。
+// 发送请求后，函数等待响应。如果 res.status 等于200且 res.data 的类型为字符串，则认为交易成功广播并且返回的是交易ID（txid）。这时，函数还会调用 updateStoredPaymentUtxos 函数来更新本地存储的UTXO信息（可能是为了标记已使用的UTXO）。
+// 如果响应的状态不是200或返回的数据类型不是字符串（即出现错误或异常），函数则认为广播交易操作失败，并将错误消息作为 GorillaPoolErrorMessage 类型返回。
+// 如果在请求过程中抛出异常，catch 代码块将捕获它。这里的 error 对象包含了异常信息。函数记录错误详情到控制台，并返回一个包含错误信息的对象，这个信息是从 error.response.data 中提取的（如果存在的话），否则返回默认的错误消息 'Unknown error while broadcasting tx'。
+// 通过这个过程，broadcastWithGorillaPool 函数实现了将已签名的交易广播到比特币网络中的功能，并且处理了可能的异常情况，向调用者提供了明确的广播结果或错误消息。
   const broadcastWithGorillaPool = async (txhex: string): Promise<GorillaPoolBroadcastResponse> => {
     try {
+      // console.log(txhex);
       const encoded = Buffer.from(txhex, 'hex').toString('base64');
-      const res = await axios.post<string | GorillaPoolErrorMessage>(`${getOrdinalsBaseUrl()}/api/tx`, {
-        rawtx: encoded,
+      // const res = await axios.post<string | GorillaPoolErrorMessage>(`${getOrdinalsBaseUrl()}/api/tx`, {//这里是send最重要的api
+      const res = await axios.post<string | GorillaPoolErrorMessage>(`http://192.168.50.61:5000/v1/bsv/main/tx/raw/`, {//这里是tbc的上链api
+        // rawtx: encoded,
+        "txHex": txhex,
       });
       if (res.status === 200 && typeof res.data === 'string') {
-        await updateStoredPaymentUtxos(txhex);
+        if (await updateStoredPaymentUtxos(txhex)) {
+          console.log("success");
+        } else {
+          console.log("fail");
+        }
+        // await updateStoredPaymentUtxos(txhex);执行了两次存在错误
         return { txid: res.data };
       } else {
         return res.data as GorillaPoolErrorMessage;
@@ -118,7 +136,7 @@ export const useGorillaPool = () => {
     }
   };
 
-  const submitTx = async (txid: string) => {
+  const submitTx = async (txid: string) => {//其目的是通过网络接口提交一个交易ID（txid），并检查提交的状态
     try {
       let res = await axios.post(`${getOrdinalsBaseUrl()}/api/tx/${txid}/submit`);
 
@@ -130,7 +148,7 @@ export const useGorillaPool = () => {
     }
   };
 
-  const getUtxoByOutpoint = async (outpoint: string): Promise<OrdinalTxo> => {
+  const getUtxoByOutpoint = async (outpoint: string): Promise<OrdinalTxo> => {//是通过网络请求获取特定的未花费交易输出（UTXO）的数据
     try {
       const { data } = await axios.get(`${getOrdinalsBaseUrl()}/api/txos/${outpoint}?script=true`);
       const ordUtxo: OrdinalTxo = data;
@@ -142,7 +160,7 @@ export const useGorillaPool = () => {
     }
   };
 
-  const getMarketData = async (outpoint: string) => {
+  const getMarketData = async (outpoint: string) => {//目的是从一个API端点获取与某个特定点相关的市场数据。
     try {
       const res = await axios.get(`${getOrdinalsBaseUrl()}/api/inscriptions/${outpoint}?script=true`);
       const data = res.data as OrdinalTxo;
@@ -157,7 +175,7 @@ export const useGorillaPool = () => {
     if (!isAddressOnRightNetwork(ordAddress)) return [];
     const res = await axios.get(`${getOrdinalsBaseUrl()}/api/bsv20/${ordAddress}/balance`);
 
-    const bsv20List: Array<BSV20> = res.data.map(
+    const bsv20List: Array<BSV20> = res.data.map(//主要功能是获取一个给定比特币SV地址（ordAddress）在一个或多个BSV20资产中的余额。
       (b: {
         all: {
           confirmed: string;
@@ -195,7 +213,7 @@ export const useGorillaPool = () => {
     return bsv20List;
   };
 
-  const getBSV20Utxos = async (tick: string, address: string): Promise<BSV20Txo[] | undefined> => {
+  const getBSV20Utxos = async (tick: string, address: string): Promise<BSV20Txo[] | undefined> => {//用来对特定的加密货币地址和代币标识符进行查询，以便获取与之关联的UTXO（Unspent Transaction Outputs，未花费交易输出）数组。
     try {
       if (!address) {
         return [];
@@ -218,7 +236,7 @@ export const useGorillaPool = () => {
     }
   };
 
-  const getBsv20Details = async (tick: string) => {
+  const getBsv20Details = async (tick: string) => {//根据传入的代币标识符（tick）异步获取BSV20代币的详细信息
     try {
       const url = isBSV20v2(tick)
         ? `${getOrdinalsBaseUrl()}/api/bsv20/id/${tick}`
@@ -232,7 +250,7 @@ export const useGorillaPool = () => {
     }
   };
 
-  const getLockedUtxos = async (address: string) => {
+  const getLockedUtxos = async (address: string) => {//此函数异步获取指定地址的锁定的UTXOs（未花费的交易输出）。它首先检查地址是否在正确的网络上，然后发送一个GET请求到指定的API端点，获取该地址的锁定UTXO列表。
     try {
       if (!isAddressOnRightNetwork(address)) return [];
       //TODO: use this instead of test endpoint - `${getOrdinalsBaseUrl()}/api/locks/address/${address}/unspent?limit=100&offset=0`
@@ -246,7 +264,7 @@ export const useGorillaPool = () => {
     }
   };
 
-  const getSpentTxids = async (outpoints: string[]): Promise<Map<string, string>> => {
+  const getSpentTxids = async (outpoints: string[]): Promise<Map<string, string>> => {//异步获取一组UTXOs是否已花费的信息，并返回一个包含UTXOs和其对应花费交易ID的映射对象。函数将输入的UTXOs数组按块分割，并对每一块进行查询
     try {
       const chunks = chunkedStringArray(outpoints, 50);
       let spentTxids = new Map<string, string>();
@@ -267,7 +285,7 @@ export const useGorillaPool = () => {
     }
   };
 
-  const getOrdContentByOriginOutpoint = async (originOutpoint: string) => {
+  const getOrdContentByOriginOutpoint = async (originOutpoint: string) => {//此函数异步获取一个outpoint（交易输出点）所指向的ordinal内容。向相应的API端点发送GET请求，并以数组形式接收二进制响应数据，然后将其转换为Buffer。
     try {
       const res = await axios.get(`${getOrdinalsBaseUrl()}/content/${originOutpoint}?fuzzy=false`, {
         responseType: 'arraybuffer',
@@ -278,7 +296,7 @@ export const useGorillaPool = () => {
     }
   };
 
-  const setDerivationTags = async (identityAddress: string, keys: Keys) => {
+  const setDerivationTags = async (identityAddress: string, keys: Keys) => {//此函数异步为一系列的ordinals设置衍生标签。它检索与给定地址相关联的UTXOs，解密获得的内容，并从中提取衍生标签和地址，最后存储这些信息。
     const taggedOrds = await getOrdUtxos(identityAddress);
     let tags: TaggedDerivationResponse[] = [];
     for (const ord of taggedOrds) {
@@ -308,7 +326,7 @@ export const useGorillaPool = () => {
     storage.set({ derivationTags: tags });
   };
 
-  const getTxOut = async (txid: string, vout: number) => {
+  const getTxOut = async (txid: string, vout: number) => {//此函数异步获取一个交易的输出部分（特定的txid和vout），并返回一个TxOut对象。它发送GET请求获取交易输出数据，并将返回的数组形式二进制数据转换为TxOut。
     try {
       await init();
       const { data } = await axios.get(`${JUNGLE_BUS_URL}/v1/txo/get/${txid}_${vout}`, { responseType: 'arraybuffer' });
@@ -318,7 +336,7 @@ export const useGorillaPool = () => {
     }
   };
 
-  const updateStoredPaymentUtxos = async (rawtx: string) => {
+  const updateStoredPaymentUtxos = async (rawtx: string) => {//这里是异步更新本地存储的支付UTXOs信息。它初始化存储系统，获得当前存储状态，并更新UTXOs的花费状态，以及新交易中获取到的UTXO。
     await init();
     const localStorage = await new Promise<{
       paymentUtxos: StoredUtxo[];
@@ -368,7 +386,7 @@ export const useGorillaPool = () => {
     return paymentUtxos;
   };
 
-  const getTokenPriceInSats = async (tokenIds: string[]) => {
+  const getTokenPriceInSats = async (tokenIds: string[]) => {//此函数异步获取一组代币在市场上的最低价格（以sats为单位）。通过发送GET请求到市场API端点，获取每个代币的市场价格，并返回结果数组。
     let result: { id: string; satPrice: number }[] = [];
     for (const tokenId of tokenIds) {
       const { data } = await axios.get<MarketResponse[]>(

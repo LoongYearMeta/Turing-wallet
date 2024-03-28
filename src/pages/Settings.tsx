@@ -105,8 +105,9 @@ type SettingsPage =
   | 'social-profile'
   | 'export-keys-options'
   | 'export-keys-qr'
+  | 'export-mnemonic-words'
   | 'preferences';
-type DecisionType = 'sign-out' | 'export-keys' | 'export-keys-qr-code';
+type DecisionType = 'sign-out' | 'export-keys' | 'export-keys-qr-code'|'export-mnemonic-words';
 
 export const Settings = () => {
   const { theme } = useTheme();
@@ -128,6 +129,7 @@ export const Settings = () => {
   const [decisionType, setDecisionType] = useState<DecisionType | undefined>();
   const { retrieveKeys } = useKeys();
   const { socialProfile, storeSocialProfile } = useSocialProfile();
+  const [mnemonicWords, setMnemonicWords] = useState('');//记忆助记词
   const [exportKeysQrData, setExportKeysAsQrData] = useState('');
   const [shouldVisibleExportedKeys, setShouldVisibleExportedKeys] = useState(false);
 
@@ -168,6 +170,14 @@ export const Settings = () => {
     setDecisionType('export-keys');
     setSpeedBumpMessage(
       'You are about to download your private keys. Make sure you are in a safe place and no one is watching.',
+    );
+    setShowSpeedBump(true);
+  };
+
+  const handleExportMnemonicWords = () => {
+    setDecisionType('export-mnemonic-words');
+    setSpeedBumpMessage(
+      'You are about to display your mnemonic words. Make sure you are in a safe place and no one is watching.',
     );
     setShowSpeedBump(true);
   };
@@ -219,9 +229,28 @@ export const Settings = () => {
     URL.revokeObjectURL(url);
   };
 
+  const exportMnemonicWords = async (password: string) => {
+    try {
+      const keys = await retrieveKeys(password);
+      if (keys && keys.mnemonic) {
+        // 将助记词保存到状态中，以便显示
+        setMnemonicWords(keys.mnemonic);
+        // 跳转到显示助记词的页面
+        setPage('export-mnemonic-words');
+      } else {
+        // 错误处理：未能获取到助记词
+        addSnackbar('Failed to retrieve mnemonic words.', 'error');
+      }
+    } catch (error) {
+      // 错误处理
+      console.error('Error exporting mnemonic words:', error);
+      addSnackbar('Error exporting mnemonic words.', 'error');
+    }
+  };
+  
   const exportKeysAsQrCode = async (password: string) => {
     const keys = await retrieveKeys(password);
-
+  
     const keysToExport = {
       mnemonic: keys.mnemonic,
       payPk: keys.walletWif,
@@ -291,11 +320,16 @@ export const Settings = () => {
       setDecisionType(undefined);
       setShowSpeedBump(false);
     }
+    if (decisionType === 'export-mnemonic-words' && password) {
+      exportMnemonicWords(password);//这里是导出助记词的函数
+      setDecisionType(undefined);
+      setShowSpeedBump(false);
+    }
   };
 
   const main = (
     <>
-      <SettingsRow
+      {/* <SettingsRow
         name="Connected Apps"
         description="Manage the apps you are connected to"
         onClick={() => setPage('connected-apps')}
@@ -311,16 +345,16 @@ export const Settings = () => {
         name="Testnet Mode"
         description="Applies to balances and app connections"
         jsxElement={<ToggleSwitch theme={theme} on={network === NetWork.Testnet} onChange={handleNetworkChange} />}
-      />
+      /> */}
       <SettingsRow
         name="Export Keys"
-        description="Download keys or export as QR code"
+        description="Download keys or Mnerm0nics words"
         onClick={() => setPage('export-keys-options')}
         jsxElement={<ForwardButton />}
       />
 
       <SettingsRow name="Lock Wallet" description="Immediately lock the wallet" onClick={lockWallet} />
-      <SettingsRow name="Sign Out" description="Sign out of Panda Wallet completely" onClick={handleSignOutIntent} />
+      <SettingsRow name="Sign Out" description="Sign out of Turing Wallet completely" onClick={handleSignOutIntent} />
     </>
   );
 
@@ -355,6 +389,16 @@ export const Settings = () => {
       <Button theme={theme} type="secondary" label={'Go back'} onClick={() => setPage('main')} />
     </>
   );
+  const mnemonicWordsPage = (
+    <PageWrapper $marginTop="5rem">
+      <BackButton onClick={() => setPage('main')} />
+      <Text theme={theme}>Your Mnemonic Words:</Text>
+      <Text theme={theme}>{mnemonicWords}</Text>
+      <Button theme={theme} type="secondary" label={'Go back'} onClick={() => setPage('main')} />
+    </PageWrapper>
+  );
+  
+  
 
   const exportKeyOptionsPage = (
     <>
@@ -364,10 +408,15 @@ export const Settings = () => {
         onClick={handleExportKeysIntent}
       />
       <SettingsRow
+        name="Export Mnemonics words"//这里是导出助记词
+        description="disaplay your  Mnemonics words"
+        onClick={handleExportMnemonicWords}
+      />
+      {/* <SettingsRow
         name="Export Keys as QR code"
         description="Display private keys as QR code for mobile import"
         onClick={handleExportKeysAsQrCodeIntent}
-      />
+      /> */}
       <Button theme={theme} type="secondary" label={'Go back'} onClick={() => setPage('main')} />
     </>
   );
@@ -393,7 +442,7 @@ export const Settings = () => {
       />
       <SettingsRow
         name="Auto Approve Limit"
-        description="Transactions at or below this BSV amount will be auto approved."
+        description="Transactions at or below this TBC amount will be auto approved."
         jsxElement={
           <Input
             theme={theme}
@@ -448,7 +497,7 @@ export const Settings = () => {
           onCancel={handleCancel}
           onConfirm={(password?: string) => handleSpeedBumpConfirm(password)}
           showSpeedBump={showSpeedBump}
-          withPassword={decisionType === 'export-keys' || decisionType === 'export-keys-qr-code'}
+          withPassword={decisionType === 'export-keys' || decisionType === 'export-keys-qr-code'||decisionType === 'export-mnemonic-words'}
         />
       }
     >
@@ -460,6 +509,7 @@ export const Settings = () => {
         <Show when={page === 'social-profile'}>{socialProfilePage}</Show>
         <Show when={page === 'export-keys-options'}>{exportKeyOptionsPage}</Show>
         <Show when={page === 'export-keys-qr'}>{exportKeysAsQrCodePage}</Show>
+        <Show when={page === 'export-mnemonic-words'}>{mnemonicWordsPage}</Show>
       </Content>
     </Show>
   );

@@ -508,7 +508,7 @@ export const OrdWallet = () => {
         Receive Ordinals
       </HeaderText>
       <Text style={{ marginBottom: '1.25rem' }} theme={theme}>
-        Only send Ordinals and BSV20 to this address. <Warning theme={theme}>Do not send BSV here.</Warning>
+        Only send Ordinals and BSV20 to this address. <Warning theme={theme}>Do not send TBC here.</Warning>
       </Text>
       <QrCode address={ordAddress} onClick={handleCopyToClipboard} />
       <CopyAddressWrapper onClick={handleCopyToClipboard}>
@@ -799,7 +799,7 @@ export const OrdWallet = () => {
         <FormContainer noValidate onSubmit={(e) => handleListOrdinal(e)}>
           <Input
             theme={theme}
-            placeholder="Enter BSV Amount"
+            placeholder="Enter TBC Amount"
             type="number"
             step="0.00000001"
             onChange={(e) => {

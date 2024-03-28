@@ -41,8 +41,8 @@ export const useWhatsOnChain = () => {
     return network === NetWork.Mainnet ? WOC_BASE_URL : WOC_TESTNET_BASE_URL;
   };
 
-  const getBsvBalance = async (address: string, pullFresh?: boolean): Promise<number | undefined> => {
-    const utxos = await getUtxos(address, pullFresh);
+  const getBsvBalance = async (address: string, pullFresh?: boolean): Promise<number | undefined> => {//这里是计算币的余额
+    const utxos = await getUtxos(address, pullFresh);//这里是需要调用getUtxos函数
     if (!utxos) return 0;
 
     const sats = utxos.reduce((a, item) => a + item.satoshis, 0);
@@ -50,7 +50,7 @@ export const useWhatsOnChain = () => {
     return bsvTotal;
   };
 
-  const getUtxos = async (fromAddress: string, pullFresh?: boolean): Promise<StoredUtxo[]> => {
+  const getUtxos = async (fromAddress: string, pullFresh?: boolean): Promise<StoredUtxo[]> => {//这里是获取utxos
     if (!isAddressOnRightNetwork(fromAddress)) return [];
     return new Promise(async (resolve) => {
       storage.get(['paymentUtxos'], async ({ paymentUtxos }) => {
@@ -64,7 +64,10 @@ export const useWhatsOnChain = () => {
             return;
           }
 
-          const { data } = await axios.get(`${getBaseUrl()}/address/${fromAddress}/unspent`, config);
+          
+          // const { data } = await axios.get(`${getBaseUrl()}/address/${fromAddress}/unspent`, config);//这里是第二重要的用于获取地址的未花费输出的 api
+          const { data } = await axios.get(`http://192.168.50.61:5000/v1/bsv/main/address/${fromAddress}/unspent`, config);//这里是本地获取btc的网址 注意cors问题
+          // console.log('data:',data);调试检查data
           const explorerUtxos: UTXO[] = data
             .filter((u: WocUtxo) => u.value !== 1) // Ensure we are never spending 1 sats
             .map((utxo: WocUtxo) => {

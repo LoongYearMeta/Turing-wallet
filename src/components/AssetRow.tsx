@@ -4,6 +4,7 @@ import { ColorThemeProps } from '../theme';
 import { HeaderText, Text } from './Reusable';
 import { formatNumberWithCommasAndDecimals, formatUSD } from '../utils/format';
 import { Show } from './Show';
+import switchAsset from '../assets/switch-asset.svg';
 
 const Container = styled.div<ColorThemeProps>`
   display: flex;
@@ -72,11 +73,12 @@ export const AssetRow = (props: AssetRowProps) => {
       </TickerWrapper>
       <BalanceWrapper>
         <HeaderText style={{ textAlign: 'right', fontSize: '1rem' }} theme={theme}>
-          {`${formatNumberWithCommasAndDecimals(balance, 3)}${isUnlockPage ? ' BSV' : ''}`}
+        {`${formatNumberWithCommasAndDecimals(balance, 6)}${isUnlockPage ? ' TBC' : ''}`}
+          {/* {`${balance}${isUnlockPage ? ' TBC' : ''}`} */}
         </HeaderText>
-        <Text style={{ textAlign: 'right', margin: '0' }} theme={theme}>
-          {isUnlockPage ? `${unlockableAmount} BSV` : formatUSD(usdBalance)}
-        </Text>
+        {/* <Text style={{ textAlign: 'right', margin: '0' }} theme={theme}>
+          {isUnlockPage ? `${unlockableAmount} TBC` : formatUSD(usdBalance)}
+        </Text> */}
       </BalanceWrapper>
     </Container>
   );

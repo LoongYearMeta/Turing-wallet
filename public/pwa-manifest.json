@@ -1,7 +1,7 @@
 {
-  "short_name": "Yours",
-  "name": "Yours Wallet",
-  "description": "A non-custodial and open-source wallet for BSV and 1Sat Ordinals",
+  "short_name": "Turing",
+  "name": "Turing Wallet",
+  "description": "A wallet for TBC",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",

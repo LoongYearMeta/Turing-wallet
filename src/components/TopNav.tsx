@@ -1,31 +1,35 @@
 import { styled } from 'styled-components';
-import logo from '../assets/yours-horizontal-logo.png';
+import logo from '../assets/turingnewlog.png';
 import { useTheme } from '../hooks/useTheme';
 import { GithubIcon, Text } from './Reusable';
-import activeCircle from '../assets/active-circle.png';
+import activeCircle from '../assets/redround.png';
 import { useKeys } from '../hooks/useKeys';
 import { truncate } from '../utils/format';
-import gitHubIcon from '../assets/github.svg';
+// import gitHubIcon from '../assets/github.svg';
+import points from '../assets/Point.png';
 import { useSnackbar } from '../hooks/useSnackbar';
-
+// position: fixed;
+//   width: 100%;这里是修改回插件
+//   margin-left: 9px;
+//   top: 20px;
 const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: fixed;
   width: 100%;
-  top: 0;
+  margin-left: 9px;
 `;
 
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
 `;
-
+//logo太宽
 const Logo = styled.img`
-  width: 6.5rem;
-  margin: 1rem;
+  width: 90px;
+  margin: 26px；
 `;
+
 
 const Circle = styled.img`
   width: 1.25rem;
@@ -48,8 +52,8 @@ export const TopNav = () => {
     <Container>
       <LogoWrapper>
         <Logo src={logo} />
-        <Text style={{ margin: '0', marginLeft: '-0.25rem' }} theme={theme}>
-          /
+        <Text style={{ margin: '0', marginLeft: '0.25rem' }} theme={theme}>
+          |
         </Text>
         <Circle src={activeCircle} />
         <Text
@@ -61,9 +65,11 @@ export const TopNav = () => {
         </Text>
       </LogoWrapper>
       <GithubIcon
-        style={{ marginRight: '1.5rem' }}
-        src={gitHubIcon}
-        onClick={() => window.open('https://github.com/yours-org', '_blank')}
+        style={{ marginRight: '1.5rem' ,cursor: 'pointer'}}
+        src={points}
+        title='TBC points are coming soon...'
+        onClick={() => addSnackbar('TBC points are coming soon...', 'info')}
+        // onClick={() => window.open('https://github.com/yours-org', '_blank')}
       />
     </Container>
   );

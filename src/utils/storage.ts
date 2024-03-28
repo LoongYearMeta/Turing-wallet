@@ -51,10 +51,12 @@ const mockStorage: Storage = {
   },
   remove: (keyOrKeys, callback) => {
     if (typeof keyOrKeys === 'string') {
+      // console.log(localStorage.getItem(keyOrKeys));
       localStorage.removeItem(keyOrKeys);
     } else if (Array.isArray(keyOrKeys)) {
       keyOrKeys.forEach((key) => {
         localStorage.removeItem(key);
+        // console.log(localStorage.getItem(key));
       });
     }
     if (callback) callback();
@@ -65,6 +67,7 @@ const mockStorage: Storage = {
       localStorage.clear();
       resolve();
     });
+
   },
 };
 

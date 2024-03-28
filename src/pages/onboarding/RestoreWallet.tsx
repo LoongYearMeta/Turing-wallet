@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import relayXLogo from '../../assets/relayx.svg';
 import twetchLogo from '../../assets/twetch.svg';
 import pandaLogo from '../../assets/panda.svg';
-import yoursWhiteLogo from '../../assets/yours-white-logo.svg';
-import yoursLogo from '../../assets/yours-logo.png';
+import yoursWhiteLogo from '../../assets/TuringLiitleCoin.png';
+import yoursLogo from '../../assets/TuringBig.png';
 import otherWallet from '../../assets/other-wallet.svg';
 import wifWallet from '../../assets/wif-wallet.svg';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { PageLoader } from '../../components/PageLoader';
-import { HeaderText, Text, YoursLogo } from '../../components/Reusable';
+import { HeaderText, Text, BigCoinLogo } from '../../components/Reusable';
 import { Show } from '../../components/Show';
 import { ToggleSwitch } from '../../components/ToggleSwitch';
 import { WalletRow } from '../../components/WalletRow';
@@ -137,7 +137,7 @@ export const RestoreWallet = () => {
 
     // Some artificial delay for the loader
     await sleep(50);
-    const mnemonic = generateSeedAndStoreEncrypted(
+    const mnemonic = generateSeedAndStoreEncrypted(//这里是从三个keys产生助记词的
       password,
       seedWords,
       walletDerivation,
@@ -165,7 +165,7 @@ export const RestoreWallet = () => {
 
   const getRestoreTitle = () => {
     return importWallet === 'yours'
-      ? 'Restore Yours wallet'
+      ? 'Restore Turing wallet'
       : importWallet === 'panda'
         ? 'Restore Panda wallet'
         : importWallet === 'relayx'
@@ -266,7 +266,7 @@ export const RestoreWallet = () => {
       </Content>
     </>
   );
-
+//这里是修改恢复的时候的项目名称
   const availableWallets = (wallets: (SupportedWalletImports | undefined)[]) => {
     return wallets.map((wallet) => {
       return (
@@ -278,9 +278,9 @@ export const RestoreWallet = () => {
               <Show when={wallet === 'yours'}>
                 <WalletWrapper>
                   <YoursWalletContainer theme={theme}>
-                    <WalletLogo src={yoursWhiteLogo} style={{ width: '1.25rem' }} />
+                    <WalletLogo src={yoursWhiteLogo} style={{ width: '2rem' }} />
                   </YoursWalletContainer>
-                  <WalletText theme={theme}>Yours</WalletText>
+                  <WalletText theme={theme}>TBC</WalletText>
                 </WalletWrapper>
               </Show>
               <Show when={wallet === 'panda'}>
@@ -329,7 +329,7 @@ export const RestoreWallet = () => {
         <Text theme={theme} style={{ marginBottom: '1rem', width: '90%' }}>
           Select the wallet you'd like to restore from
         </Text>
-        {availableWallets(['yours', 'panda', 'relayx', 'twetch', undefined, 'wif'])}
+        {availableWallets(['yours', 'wif'])}
         <Button theme={theme} type="secondary" label="Go back" onClick={() => navigate('/')} />
       </Content>
     </>
@@ -338,7 +338,7 @@ export const RestoreWallet = () => {
   const successStep = (
     <>
       <Content>
-        <YoursLogo src={yoursLogo} />
+        <BigCoinLogo src={yoursLogo} />
         <HeaderText theme={theme}>Success!</HeaderText>
         <Text theme={theme} style={{ marginBottom: '1rem' }}>
           Your wallet has been restored.

@@ -1,7 +1,7 @@
 import { validate } from 'bitcoin-address-validation';
 import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import bsvCoin from '../../assets/bsv-coin.svg';
+import tbcCoin from '../../assets/TuringLiitleCoin.png';
 import { BackButton } from '../../components/BackButton';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
@@ -220,7 +220,7 @@ export const BsvSendRequest = (props: BsvSendRequestProps) => {
     return web3Request.map((r, i) => {
       return (
         <LineItem key={i}>
-          <Icon src={bsvCoin} />
+          <Icon src={tbcCoin} />
           <Text style={{ margin: 0 }} theme={theme}>{`${r.satoshis / BSV_DECIMAL_CONVERSION}`}</Text>
           <Text style={{ margin: 0 }} theme={theme}>
             {r.address ? truncate(r.address, 5, 5) : ''}
@@ -239,7 +239,7 @@ export const BsvSendRequest = (props: BsvSendRequestProps) => {
   return (
     <>
       <Show when={isProcessing}>
-        <PageLoader theme={theme} message="Sending BSV..." />
+        <PageLoader theme={theme} message="Sending TBC..." />
       </Show>
       <Show when={!isProcessing && !!web3Request && !hasSent}>
         <ConfirmContent>
@@ -266,7 +266,7 @@ export const BsvSendRequest = (props: BsvSendRequestProps) => {
             <Button
               theme={theme}
               type="primary"
-              label={`Approve ${web3Request.reduce((a, item) => a + item.satoshis, 0) / BSV_DECIMAL_CONVERSION} BSV`}
+              label={`Approve ${web3Request.reduce((a, item) => a + item.satoshis, 0) / BSV_DECIMAL_CONVERSION} TBC`}
               disabled={isProcessing}
               isSubmit
             />

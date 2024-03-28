@@ -6,17 +6,17 @@ Version: v3.0.0
 
 <a href="https://chrome.google.com/webstore/detail/panda-wallet/mlbnicldlpdimbjdcncnklfempedeipj" target="_blank">🐼 Download Chrome Extension 🐼</a>
 
-# Panda Wallet | Non-Custodial Web3 Wallet For BSV
+# Panda Wallet | Non-Custodial Web3 Wallet For TBC
 
-## IMPORTANT NOTICE: Panda is in the process of rebranding to Yours Wallet. The wallet will automatically be updated but namespace changes to the repo will take some time!
+## IMPORTANT NOTICE: Panda is in the process of rebranding to Turing Wallet. The wallet will automatically be updated but namespace changes to the repo will take some time!
 
-Panda Wallet is an open-source and non-custodial web3 wallet for Bitcoin SV (BSV) and [1Sat Ordinals](https://docs.1satordinals.com/). This wallet allows users to have full control over their funds, providing security and independence in managing their assets.
+Panda Wallet is an open-source and non-custodial web3 wallet for Bitcoin SV (TBC) and [1Sat Ordinals](https://docs.1satordinals.com/). This wallet allows users to have full control over their funds, providing security and independence in managing their assets.
 
 ## Features
 
 - 🔑 **Non-Custodial:** Your private keys are encrypted and stored locally on your device, ensuring complete control over your funds.
 - 😎 **User-Friendly:** A user-friendly interface makes asset management a breeze.
-- ✅ **BSV Support:** Receive and Send BSV payments.
+- ✅ **TBC Support:** Receive and Send TBC payments.
 - 🟡 **1Sat Ordinals:** Full support for sending and transferring 1Sat Ordinals.
 - 🔐 **Secure:** Open Source and audited by the community.
 
@@ -38,7 +38,7 @@ If you'd like to contribute to Panda Wallet's development check out [contributin
 
 ## Support The Project
 
-**BSV:** `1MtzWXQEYGp89bQ9U2nfrnuChFv37j6pV6`
+**TBC:** `1MtzWXQEYGp89bQ9U2nfrnuChFv37j6pV6`
 
 ## Contact Us
 
