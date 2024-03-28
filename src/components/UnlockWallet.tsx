@@ -85,14 +85,14 @@ export const UnlockWallet = (props: UnlockWalletProps) => {
           disabled={isProcessing}
           isSubmit
         />
-        <Button
+        {/* <Button
           theme={theme}
           type="secondary-outline"
           label={'Sign Out'}
           onClick={() => {
           storage.clear(); 
           window.location.reload();}}
-        />
+        /> */}
       </FormContainer>
     </Container>
   );

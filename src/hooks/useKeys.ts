@@ -20,7 +20,7 @@ export type KeyStorage = {
 
 export type WifKeys = {
   payPk: string;
-  ordPk: string;
+  ordPk?: string;
   mnemonic?: string;
   identityPk?: string;
 };

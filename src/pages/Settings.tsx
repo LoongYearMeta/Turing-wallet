@@ -222,7 +222,7 @@ export const Settings = () => {
     const url = URL.createObjectURL(blob);
     const tempLink = document.createElement('a');
     tempLink.href = url;
-    tempLink.setAttribute('download', 'panda_wallet_keys.json');
+    tempLink.setAttribute('download', 'turing_wallet_keys.json');
     document.body.appendChild(tempLink);
     tempLink.click();
     document.body.removeChild(tempLink);
@@ -239,7 +239,7 @@ export const Settings = () => {
         setPage('export-mnemonic-words');
       } else {
         // 错误处理：未能获取到助记词
-        addSnackbar('Failed to retrieve mnemonic words.', 'error');
+        addSnackbar('Failed to retrieve mnemonic words,The current keys may not be derived from the mnemonic.', 'error',5000);
       }
     } catch (error) {
       // 错误处理

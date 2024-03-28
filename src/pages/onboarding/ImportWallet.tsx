@@ -5,7 +5,6 @@ import { BackButton } from '../../components/BackButton';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { PageLoader } from '../../components/PageLoader';
-import { PandaHead } from '../../components/PandaHead';
 import { HeaderText, Text , BigCoinLogo} from '../../components/Reusable';
 import { Show } from '../../components/Show';
 import { useBottomMenu } from '../../hooks/useBottomMenu';
@@ -72,19 +71,24 @@ export const ImportWallet = () => {
         return;
       }
 
-      if (!payPk || !ordPk) {
-        addSnackbar('Both payPk and ordPk WIFs are required!', 'error');
+      // if (!payPk || !ordPk) {
+      //   addSnackbar('Both payPk and ordPk WIFs are required!', 'error');
+      //   return;
+      // }
+
+      if (!payPk ) {
+       addSnackbar('payPk WIFs are required!', 'error');
         return;
       }
 
-      if (!identityPk) {
+      if (!identityPk|| !ordPk) {
         setLoading(false);
         addSnackbar(
-          'IMPORTANT: Since you did not provide an identity key, Panda Wallet will generate one for you, MAKE SURE TO BACK UP YOUR NEW PANDA WALLET!',
+          'IMPORTANT: Since you did not provide an identity key or ordinals key, Turing Wallet will generate one for you, MAKE SURE TO BACK UP YOUR NEW TRUING WALLET!',
           'info',
-          7000,
+          5000,
         );
-        await sleep(7000);
+        await sleep(5000);
         setLoading(true);
       }
 

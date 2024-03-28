@@ -92,28 +92,55 @@ export const getKeys = (
   return keys;
 };
 
+// export const getKeysFromWifs = (wifs: WifKeys) => {
+//   const walletPrivKey = PrivateKey.from_wif(wifs.payPk);
+//   const walletPubKey = walletPrivKey.to_public_key();
+//   const walletAddress = walletPubKey.to_address().to_string();
+
+//   const ordPrivKey = PrivateKey.from_wif(wifs.ordPk);
+//   const ordPubKey = ordPrivKey.to_public_key();
+//   const ordAddress = ordPubKey.to_address().to_string();
+
+//   let identityPrivKey: PrivateKey | undefined;
+//   if (wifs.identityPk) {
+//     identityPrivKey = PrivateKey.from_wif(wifs.identityPk);
+//   } else {
+//     let privBuf = Buffer.concat([Buffer.from(walletPrivKey.to_bytes()), Buffer.from(ordPrivKey.to_bytes())]);
+//     while (!identityPrivKey) {
+//       privBuf = Buffer.from(Hash.sha_256(privBuf).to_bytes());
+//       const bn = new Bn().fromBuffer(privBuf);
+//       if (bn.lt(Point.getN())) {
+//         identityPrivKey = PrivateKey.from_bytes(bn.toBuffer());
+//       }
+//     }
+//   }
 export const getKeysFromWifs = (wifs: WifKeys) => {
-  const walletPrivKey = PrivateKey.from_wif(wifs.payPk);
-  const walletPubKey = walletPrivKey.to_public_key();
-  const walletAddress = walletPubKey.to_address().to_string();
+    const walletPrivKey = PrivateKey.from_wif(wifs.payPk);
+    const walletPubKey = walletPrivKey.to_public_key();
+    const walletAddress = walletPubKey.to_address().to_string();
 
-  const ordPrivKey = PrivateKey.from_wif(wifs.ordPk);
-  const ordPubKey = ordPrivKey.to_public_key();
-  const ordAddress = ordPubKey.to_address().to_string();
+    if(!wifs.ordPk){
+      const mnemonic = bip39.generateMnemonic();
+      const ords = generateKeysFromTag(mnemonic, DEFAULT_ORD_PATH);
+      wifs.ordPk = ords.wif
+    }
+    const ordPrivKey = PrivateKey.from_wif(wifs.ordPk);
+    const ordPubKey = ordPrivKey.to_public_key();
+    const ordAddress = ordPubKey.to_address().to_string();
 
-  let identityPrivKey: PrivateKey | undefined;
-  if (wifs.identityPk) {
-    identityPrivKey = PrivateKey.from_wif(wifs.identityPk);
-  } else {
-    let privBuf = Buffer.concat([Buffer.from(walletPrivKey.to_bytes()), Buffer.from(ordPrivKey.to_bytes())]);
-    while (!identityPrivKey) {
-      privBuf = Buffer.from(Hash.sha_256(privBuf).to_bytes());
-      const bn = new Bn().fromBuffer(privBuf);
-      if (bn.lt(Point.getN())) {
-        identityPrivKey = PrivateKey.from_bytes(bn.toBuffer());
+    let identityPrivKey: PrivateKey | undefined;
+    if (wifs.identityPk) {
+      identityPrivKey = PrivateKey.from_wif(wifs.identityPk);
+    } else {
+      let privBuf = Buffer.concat([Buffer.from(walletPrivKey.to_bytes()), Buffer.from(ordPrivKey.to_bytes())]);
+      while (!identityPrivKey) {
+        privBuf = Buffer.from(Hash.sha_256(privBuf).to_bytes());
+        const bn = new Bn().fromBuffer(privBuf);
+        if (bn.lt(Point.getN())) {
+          identityPrivKey = PrivateKey.from_bytes(bn.toBuffer());
+        }
       }
     }
-  }
 
   const identityPubKey = identityPrivKey.to_public_key();
   const identityAddress = identityPubKey.to_address().to_string();
