@@ -66,7 +66,7 @@ export const useWhatsOnChain = () => {
 
           
           // const { data } = await axios.get(`${getBaseUrl()}/address/${fromAddress}/unspent`, config);//这里是第二重要的用于获取地址的未花费输出的 api
-          const { data } = await axios.get(`http://192.168.50.61:5000/v1/bsv/main/address/${fromAddress}/unspent`, config);//这里是本地获取btc的网址 注意cors问题
+          const { data } = await axios.get(`http://127.0.0.1:5000/v1/bsv/main/address/${fromAddress}/unspent`, config);//这里是本地获取btc的网址 注意cors问题
           // console.log('data:',data);调试检查data
           const explorerUtxos: UTXO[] = data
             .filter((u: WocUtxo) => u.value !== 1) // Ensure we are never spending 1 sats

@@ -2,7 +2,7 @@ export const WOC_BASE_URL = 'https://api.whatsonchain.com/v1/bsv/main';//这里�
 export const TBC_BASE_URL = 'http://13.250.100.155:5000/v1/bsv/main'; 
 
 export const WOC_TESTNET_BASE_URL = 'https://api.whatsonchain.com/v1/bsv/test';
-export const TBC_TESTNET_URL = 'http://192.168.50.01:5000/v1/bsv/main';//这是tbc的测试网
+export const TBC_TESTNET_URL = 'http://127.0.0.1:5000/v1/bsv/main';//这是tbc的测试网
 
 export const GP_BASE_URL = 'https://ordinals.gorillapool.io';//这里是主网的url 上链的网络 send需要修改的地方 猩猩池的主网
 export const JUNGLE_BUS_URL = 'https://junglebus.gorillapool.io';
