@@ -1,8 +1,8 @@
 /* global chrome */
 console.log('Turing Wallet Background Script Running!');
 
-const WOC_BASE_URL = 'https://api.whatsonchain.com/v1/bsv';//这里是奇怪的
-// const WOC_BASE_URL = 'http://127.0.0.1/v1/bsv';
+// const WOC_BASE_URL = 'https://api.whatsonchain.com/v1/bsv';//这里是奇怪的
+const WOC_BASE_URL = 'http://localhost/v1/bsv';
 let responseCallbackForConnectRequest;
 let responseCallbackForSendBsvRequest;
 let responseCallbackForTransferOrdinalRequest;

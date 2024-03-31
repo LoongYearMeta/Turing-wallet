@@ -115,7 +115,7 @@ export const useGorillaPool = () => {
       // console.log(txhex);
       const encoded = Buffer.from(txhex, 'hex').toString('base64');
       // const res = await axios.post<string | GorillaPoolErrorMessage>(`${getOrdinalsBaseUrl()}/api/tx`, {//这里是send最重要的api
-      const res = await axios.post<string | GorillaPoolErrorMessage>(`http://127.0.0.1:5000/v1/bsv/main/tx/raw/`, {//这里是tbc的上链api
+      const res = await axios.post<string | GorillaPoolErrorMessage>(`http://localhost:5000/v1/bsv/main/tx/raw/`, {//这里是tbc的上链api
         // rawtx: encoded,
         "txHex": txhex,
       });
